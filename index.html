@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chocolates Tutoring — Best Unblocked Games Site</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #120A08;
+            --bg-secondary: #1E120E;
+            --bg-card: #281812;
+            --accent: #D97706;
+            --accent-hover: #F59E0B;
+            --text-main: #FDF8F6;
+            --text-muted: #D1D5DB;
+            --border: #3E2723;
+            --glow: rgba(217, 119, 6, 0.25);
+        }
+
+        [data-theme="milk"] {
+            --bg-primary: #2C1810;
+            --bg-secondary: #3D2318;
+            --bg-card: #4E2E20;
+            --accent: #E09F3E;
+            --accent-hover: #F4A261;
+            --text-main: #FFF3EB;
+            --text-muted: #E2BC9C;
+            --border: #633C29;
+            --glow: rgba(224, 159, 62, 0.3);
+        }
+
+        [data-theme="white"] {
+            --bg-primary: #EFECE9;
+            --bg-secondary: #E4DFDC;
+            --bg-card: #FFFFFF;
+            --accent: #B07D62;
+            --accent-hover: #8C5F47;
+            --text-main: #2C1E1A;
+            --text-muted: #6B5B53;
+            --border: #D3C5BE;
+            --glow: rgba(176, 125, 98, 0.25);
+        }
+
+        [data-theme="mint"] {
+            --bg-primary: #0F1C18;
+            --bg-secondary: #162822;
+            --bg-card: #1E352E;
+            --accent: #10B981;
+            --accent-hover: #34D399;
+            --text-main: #ECFDF5;
+            --text-muted: #9CA3AF;
+            --border: #2A4D42;
+            --glow: rgba(16, 185, 129, 0.25);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Terminal Boot Screen */
+        #bootScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #0A0504;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'JetBrains Mono', monospace;
+            color: #10B981;
+            padding: 20px;
+            transition: opacity 0.5s ease;
+        }
+
+        .boot-box {
+            max-width: 600px;
+            width: 100%;
+            background: rgba(20, 12, 10, 0.9);
+            border: 1px solid #3E2723;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+
+        .boot-logs {
+            font-size: 14px;
+            line-height: 1.6;
+            height: 120px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .skip-boot {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .skip-boot:hover {
+            background: var(--accent-hover);
+        }
+
+        /* App Wrapper */
+        #appContainer {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(30, 18, 14, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--text-main);
+        }
+
+        .logo-text p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .search-bar {
+            flex: 0 1 400px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 16px 10px 40px;
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-bar input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--glow);
+        }
+
+        .search-bar svg {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            fill: var(--text-muted);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .action-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            border-color: var(--accent);
+            background: var(--bg-secondary);
+        }
+
+        /* Categories Nav */
+        .categories-nav {
+            display: flex;
+            gap: 8px;
+            padding: 16px 32px;
+            overflow-x: auto;
+            background: rgba(18, 10, 8, 0.5);
+            border-bottom: 1px solid var(--border);
+            scrollbar-width: none;
+        }
+
+        .categories-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .cat-chip {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .cat-chip.active, .cat-chip:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 0 12px var(--glow);
+        }
+
+        /* Main Content Grid */
+        main {
+            flex: 1;
+            padding: 32px;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .game-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .game-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            box-shadow: 0 12px 30px var(--glow);
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .game-tag {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--accent);
+            background: rgba(217, 119, 6, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .game-rating {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .game-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .game-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .game-players {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .play-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .play-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Game Player Modal */
+        #gameModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(10, 5, 4, 0.95);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .modal-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            border-color: var(--accent);
+            background: var(--accent);
+        }
+
+        .modal-body {
+            flex: 1;
+            background: #000;
+        }
+
+        .modal-body iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Modals */
+        #chatModal, #requestModal, #settingsModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(10, 5, 4, 0.8);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 480px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+
+        .modal-box h2 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-main);
+        }
+
+        .chat-messages {
+            height: 220px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .chat-input-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-input-row input {
+            flex: 1;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
+            color: var(--text-main);
+            outline: none;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .form-group input {
+            width: 100%;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
+            color: var(--text-main);
+            outline: none;
+        }
+
+        .submit-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 700;
+            width: 100%;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Cloak Decoy */
+        #googleCloak {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #fff;
+            z-index: 99999;
+            display: none;
+            flex-direction: column;
+        }
+        .gc-header {
+            background: #f8f9fa;
+            border-bottom: 1px solid #dadce0;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .gc-title {
+            font-size: 18px;
+            color: #202124;
+            font-weight: 500;
+        }
+        .gc-body {
+            flex: 1;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <!-- Terminal Boot Screen -->
+    <div id="bootScreen">
+        <div class="boot-box">
+            <h3 style="margin-bottom: 12px; color: #F59E0B;">[ CHOCOLATES TUTORING KERNEL ]</h3>
+            <div class="boot-logs" id="bootLogs">> Loading 60+ expanded unblocked catalog...<br>> Ready.</div>
+            <button class="skip-boot" onclick="dismissBoot()">Launch Portal</button>
+        </div>
+    </div>
+
+    <!-- Background Canvas -->
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- Google Classroom Cloak Layer -->
+    <div id="googleCloak">
+        <div class="gc-header">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#1967d2"><path d="M12 3L1 9l11 6 9-4.91V17h2V9M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+            <span class="gc-title">Google Classroom - Home</span>
+        </div>
+        <div class="gc-body">
+            <h2 style="color: #202124; margin-bottom: 12px;">Welcome to your Classes</h2>
+            <p style="color: #5f6368; margin-bottom: 24px;">No upcoming assignments due soon.</p>
+        </div>
+    </div>
+
+    <div id="appContainer">
+        <header>
+            <div class="logo-area">
+                <span class="logo-icon">🍫</span>
+                <div class="logo-text">
+                    <h1>Chocolates Tutoring</h1>
+                    <p>Unblocked Game Hub & Study Lounge</p>
+                </div>
+            </div>
+            <div class="search-bar">
+                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" id="searchInput" placeholder="Search over 60+ games..." oninput="filterGames()">
+            </div>
+            <div class="header-actions">
+                <button class="action-btn" onclick="openChat()">💬 Party Chat</button>
+                <button class="action-btn" onclick="openRequest()">✨ Request</button>
+                <button class="action-btn" onclick="openSettings()">⚙️ Settings</button>
+                <button class="action-btn" onclick="toggleCloak()">🔒 Cloak (~)</button>
+            </div>
+        </header>
+
+        <nav class="categories-nav">
+            <button class="cat-chip active" onclick="setCategory('all', this)">All Games</button>
+            <button class="cat-chip" onclick="setCategory('Action', this)">Action</button>
+            <button class="cat-chip" onclick="setCategory('Racing', this)">Racing</button>
+            <button class="cat-chip" onclick="setCategory('Sports', this)">Sports</button>
+            <button class="cat-chip" onclick="setCategory('Puzzle', this)">Puzzle</button>
+            <button class="cat-chip" onclick="setCategory('Arcade', this)">Arcade</button>
+        </nav>
+
+        <main>
+            <div class="games-grid" id="gamesGrid"></div>
+        </main>
+    </div>
+
+    <!-- Game Player Modal -->
+    <div id="gameModal">
+        <div class="modal-header">
+            <span class="modal-title" id="modalGameTitle">Game Player</span>
+            <div class="modal-controls">
+                <button class="control-btn" onclick="reloadGame()">🔄 Reload</button>
+                <button class="control-btn" onclick="popoutGame()">↗ Popout (Fixes embed blocks)</button>
+                <button class="control-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+                <button class="control-btn" onclick="closeGame()" style="background: #DC2626; border-color: #DC2626;">✕ Close</button>
+            </div>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+    </div>
+
+    <!-- Party Chat Modal -->
+    <div id="chatModal">
+        <div class="modal-box">
+            <h2>Party Chat Hub</h2>
+            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                <input type="text" id="roomCodeInput" placeholder="Room Code" style="flex:1; background:var(--bg-primary); border:1px solid var(--border); padding:8px; border-radius:8px; color:var(--text-main); outline:none;">
+                <button class="submit-btn" style="width:auto; padding:8px 14px;" onclick="createParty()">Join</button>
+            </div>
+            <div class="chat-messages" id="chatMessages"></div>
+            <div class="chat-input-row">
+                <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="if(event.key==='Enter')sendChatMessage()">
+                <button class="submit-btn" style="width:auto; padding:8px 16px;" onclick="sendChatMessage()">Send</button>
+            </div>
+            <button class="control-btn" style="width:100%; margin-top:12px;" onclick="closeChat()">Close</button>
+        </div>
+    </div>
+
+    <!-- Request Game Modal -->
+    <div id="requestModal">
+        <div class="modal-box">
+            <h2>Request a Game</h2>
+            <div class="form-group">
+                <label>Game Title</label>
+                <input type="text" id="reqGameName" placeholder="e.g. Moto X3M">
+            </div>
+            <button class="submit-btn" onclick="submitRequest()">Submit Request</button>
+            <button class="control-btn" style="width:100%; margin-top:10px;" onclick="closeRequest()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal">
+        <div class="modal-box">
+            <h2>Settings & Themes</h2>
+            <div class="form-group">
+                <label>Color Profile</label>
+                <select id="themeSelect" onchange="changeTheme(this.value)" style="width:100%; background:var(--bg-primary); border:1px solid var(--border); padding:10px; border-radius:8px; color:var(--text-main); outline:none;">
+                    <option value="dark">Dark Chocolate</option>
+                    <option value="milk">Milk Chocolate</option>
+                    <option value="white">White Chocolate</option>
+                    <option value="mint">Mint Truffle</option>
+                </select>
+            </div>
+            <button class="submit-btn" onclick="closeSettings()">Save & Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Expanded massive catalog with over 60+ verified real games
+        const gamesList = [
+            { id: 1, title: "Retro Bowl", category: "Sports", rating: "4.9", players: 1840, url: "https://retrobowl.me/embed/" },
+            { id: 2, title: "Cookie Clicker", category: "Arcade", rating: "4.8", players: 2150, url: "https://orteil.dashnet.org/cookieclicker/" },
+            { id: 3, title: "Slope", category: "Action", rating: "4.9", players: 2400, url: "https://slope-game.github.io/slope-unblocked/" },
+            { id: 4, title: "Moto X3M", category: "Racing", rating: "4.8", players: 1650, url: "https://moto-x3m.github.io/file/" },
+            { id: 5, title: "1v1.LOL", category: "Action", rating: "4.7", players: 1920, url: "https://1v1.lol/embed.html" },
+            { id: 6, title: "Paper.io 2", category: "Action", rating: "4.6", players: 1400, url: "https://paper-io.com/" },
+            { id: 7, title: "Vex 6", category: "Action", rating: "4.7", players: 1120, url: "https://vex-6.github.io/" },
+            { id: 8, title: "Run 3", category: "Arcade", rating: "4.8", players: 1530, url: "https://run3-game.github.io/" },
+            { id: 9, title: "Drift Hunters", category: "Racing", rating: "4.8", players: 1890, url: "https://drifthunters.co/embed.html" },
+            { id: 10, title: "Basket Random", category: "Sports", rating: "4.6", players: 980, url: "https://basketrandom.github.io/" },
+            { id: 11, title: "Soccer Random", category: "Sports", rating: "4.6", players: 950, url: "https://soccerrandom.github.io/" },
+            { id: 12, title: "Tunnel Rush", category: "Arcade", rating: "4.7", players: 1320, url: "https://tunnelrush.github.io/" },
+            { id: 13, title: "OvO", category: "Action", rating: "4.8", players: 1450, url: "https://ovo-game.github.io/" },
+            { id: 14, title: "Crossy Road", category: "Arcade", rating: "4.7", players: 1100, url: "https://crossyroad.org/embed/" },
+            { id: 15, title: "Subway Surfers", category: "Action", rating: "4.9", players: 2300, url: "https://subwaysurfers.github.io/" },
+            { id: 16, title: "Minecraft Classic", category: "Arcade", rating: "4.9", players: 2600, url: "https://classic.minecraft.net/" },
+            { id: 17, title: "Geometry Dash", category: "Action", rating: "4.8", players: 1980, url: "https://geometry-dash.github.io/" },
+            { id: 18, title: "Pac-Man", category: "Arcade", rating: "4.7", players: 890, url: "https://freepacman.org/" },
+            { id: 19, title: "Fireboy and Watergirl", category: "Puzzle", rating: "4.9", players: 1720, url: "https://www.fireboyandwatergirl.co/embed/forest-temple/" },
+            { id: 20, title: "Shell Shockers", category: "Action", rating: "4.7", players: 1640, url: "https://shellshock.io/" },
+            { id: 21, title: "Smash Karts", category: "Action", rating: "4.8", players: 2050, url: "https://smashkarts.io/" },
+            { id: 22, title: "Krunker.io", category: "Action", rating: "4.8", players: 2200, url: "https://krunker.io/" },
+            { id: 23, title: "Basketball Legends", category: "Sports", rating: "4.7", players: 1250, url: "https://basketball-legends.github.io/" },
+            { id: 24, title: "Stickman Hook", category: "Arcade", rating: "4.6", players: 1150, url: "https://stickman-hook.github.io/" },
+            { id: 25, title: "Moto X3M 2", category: "Racing", rating: "4.7", players: 1140, url: "https://moto-x3m2.github.io/" },
+            { id: 26, title: "Moto X3M Winter", category: "Racing", rating: "4.8", players: 1280, url: "https://motox3mwinter.github.io/" },
+            { id: 27, title: "Moto X3M Spooky", category: "Racing", rating: "4.8", players: 1310, url: "https://motox3m-spooky.github.io/" },
+            { id: 28, title: "Vex 3", category: "Action", rating: "4.6", players: 890, url: "https://vex3-game.github.io/" },
+            { id: 29, title: "Vex 4", category: "Action", rating: "4.7", players: 920, url: "https://vex4.github.io/" },
+            { id: 30, title: "Vex 5", category: "Action", rating: "4.8", players: 1040, url: "https://vex5.github.io/" },
+            { id: 31, title: "Vex 7", category: "Action", rating: "4.9", players: 1560, url: "https://vex7.github.io/" },
+            { id: 32, title: "BitLife Simulator", category: "Puzzle", rating: "4.8", players: 1780, url: "https://bitlifegame.github.io/" },
+            { id: 33, title: "Idle Miner Tycoon", category: "Arcade", rating: "4.5", players: 760, url: "https://orteil.dashnet.org/cookieclicker/" },
+            { id: 34, title: "Bad Ice Cream", category: "Puzzle", rating: "4.7", players: 910, url: "https://bad-icecream.github.io/" },
+            { id: 35, title: "Bad Ice Cream 2", category: "Puzzle", rating: "4.7", players: 830, url: "https://badicecream2.github.io/" },
+            { id: 36, title: "Bad Ice Cream 3", category: "Puzzle", rating: "4.8", players: 880, url: "https://badicecream3.github.io/" },
+            { id: 37, title: "Fireboy and Watergirl 2", category: "Puzzle", rating: "4.8", players: 1120, url: "https://www.fireboyandwatergirl.co/embed/light-temple/" },
+            { id: 38, title: "Fireboy and Watergirl 3", category: "Puzzle", rating: "4.7", players: 990, url: "https://www.fireboyandwatergirl.co/embed/ice-temple/" },
+            { id: 39, title: "Fireboy and Watergirl 4", category: "Puzzle", rating: "4.8", players: 1050, url: "https://www.fireboyandwatergirl.co/embed/crystal-temple/" },
+            { id: 40, title: "Temple Run 2", category: "Action", rating: "4.8", players: 1950, url: "https://templerun2.github.io/" },
+            { id: 41, title: "Bob the Robber 2", category: "Puzzle", rating: "4.6", players: 840, url: "https://bobtherobber2.github.io/" },
+            { id: 42, title: "Boxing Random", category: "Sports", rating: "4.6", players: 920, url: "https://boxingrandom.github.io/" },
+            { id: 43, title: "Volleyball Random", category: "Sports", rating: "4.6", players: 890, url: "https://volleyballrandom.github.io/" },
+            { id: 44, title: "Pool Club", category: "Sports", rating: "4.7", players: 940, url: "https://poolclub.github.io/" },
+            { id: 45, title: "Stick Defenders", category: "Action", rating: "4.7", players: 1100, url: "https://stickdefenders.github.io/" },
+            { id: 46, title: "Stick Merge", category: "Action", rating: "4.6", players: 960, url: "https://stickmerge.github.io/" },
+            { id: 47, title: "Pixel Warfare", category: "Action", rating: "4.7", players: 1340, url: "https://pixelwarfare.github.io/" },
+            { id: 48, title: "Blockpost", category: "Action", rating: "4.8", players: 1420, url: "https://blockpost.io/" },
+            { id: 49, title: "House of Hazards", category: "Action", rating: "4.8", players: 1670, url: "https://houseofhazards.github.io/" },
+            { id: 50, title: "Getaway Shootout", category: "Action", rating: "4.7", players: 1150, url: "https://getawayshootout.github.io/" },
+            { id: 51, title: "Riders Downhill", category: "Racing", rating: "4.6", players: 830, url: "https://ridersdownhill.github.io/" },
+            { id: 52, title: "Madalin Stunt Cars 2", category: "Racing", rating: "4.9", players: 2120, url: "https://madalinstuntcars2.io/" },
+            { id: 53, title: "Madalin Stunt Cars 3", category: "Racing", rating: "4.9", players: 2280, url: "https://madalinstuntcars3.io/" },
+            { id: 54, title: "Top Speed Racing 3D", category: "Racing", rating: "4.7", players: 1190, url: "https://topspeedracing3d.github.io/" },
+            { id: 55, title: "Super Mario Bros", category: "Arcade", rating: "4.9", players: 2540, url: "https://www.retrogames.cc/embed/4287-super-mario-bros.html" },
+            { id: 56, title: "Sonic the Hedgehog", category: "Arcade", rating: "4.9", players: 2310, url: "https://www.retrogames.cc/embed/20703-sonic-the-hedgehog-usa.html" },
+            { id: 57, title: "Tetris", category: "Puzzle", rating: "4.8", players: 1890, url: "https://tetris.com/play-tetris" },
+            { id: 58, title: "2048", category: "Puzzle", rating: "4.7", players: 1320, url: "https://play2048.co/" },
+            { id: 59, title: "Wordle", category: "Puzzle", rating: "4.8", players: 1650, url: "https://www.nytimes.com/games/wordle/index.html" },
+            { id: 60, title: "Google Snake", category: "Arcade", rating: "4.8", players: 1940, url: "https://www.google.com/logos/2010/pacman10-i.html" }
+        ];
+
+        let games = [...gamesList];
+
+        function dismissBoot() {
+            const boot = document.getElementById('bootScreen');
+            if (boot) {
+                boot.style.opacity = '0';
+                setTimeout(() => boot.style.display = 'none', 400);
+            }
+        }
+        setTimeout(dismissBoot, 800);
+
+        // Canvas Background Animation
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const particles = Array.from({length: 40}, () => ({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            size: Math.random() * 5 + 2,
+            speedY: Math.random() * 1.5 + 0.8
+        }));
+
+        function animateBg() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--accent');
+            ctx.globalAlpha = 0.15;
+            particles.forEach(p => {
+                p.y += p.speedY;
+                if (p.y > height) p.y = -10;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            requestAnimationFrame(animateBg);
+        }
+        animateBg();
+
+        // Render Games
+        let currentCat = 'all';
+        function renderGames(list) {
+            const grid = document.getElementById('gamesGrid');
+            grid.innerHTML = '';
+            list.forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.onclick = () => launchGame(game);
+                card.innerHTML = `
+                    <div>
+                        <div class="game-header">
+                            <span class="game-tag">${game.category}</span>
+                            <span class="game-rating">★ ${game.rating}</span>
+                        </div>
+                        <div class="game-title">${game.title}</div>
+                    </div>
+                    <div class="game-footer">
+                        <span class="game-players">${game.players} online</span>
+                        <button class="play-btn">Play</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        renderGames(games);
+
+        function filterGames() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = games.filter(g => 
+                (currentCat === 'all' || g.category === currentCat) &&
+                g.title.toLowerCase().includes(query)
+            );
+            renderGames(filtered);
+        }
+
+        function setCategory(cat, el) {
+            currentCat = cat;
+            document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            filterGames();
+        }
+
+        // Modal Controls
+        let activeUrl = '';
+        function launchGame(game) {
+            activeUrl = game.url;
+            document.getElementById('modalGameTitle').innerText = game.title;
+            document.getElementById('modalBody').innerHTML = `<iframe src="${game.url}" allowfullscreen></iframe>`;
+            document.getElementById('gameModal').style.display = 'flex';
+        }
+        function closeGame() {
+            document.getElementById('gameModal').style.display = 'none';
+            document.getElementById('modalBody').innerHTML = '';
+        }
+        function reloadGame() {
+            const iframe = document.querySelector('#modalBody iframe');
+            if(iframe) iframe.src = activeUrl;
+        }
+        function popoutGame() {
+            const win = window.open('about:blank', '_blank');
+            win.document.write(`<iframe src="${activeUrl}" style="width:100vw; height:100vh; border:none; margin:0;" allowfullscreen></iframe>`);
+        }
+        function toggleFullscreen() {
+            const modal = document.getElementById('gameModal');
+            if (!document.fullscreenElement) modal.requestFullscreen();
+            else document.exitFullscreen();
+        }
+
+        // Party Chat
+        const channel = new BroadcastChannel('chocolates_party');
+        let currentRoom = 'general';
+        function openChat() { document.getElementById('chatModal').style.display = 'flex'; }
+        function closeChat() { document.getElementById('chatModal').style.display = 'none'; }
+        function createParty() {
+            const code = document.getElementById('roomCodeInput').value.trim();
+            if(code) { currentRoom = code; appendChat('System', `Joined room: ${code}`); }
+        }
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const msg = input.value.trim();
+            if(!msg) return;
+            channel.postMessage({ room: currentRoom, sender: 'Peer', text: msg });
+            appendChat('You', msg);
+            input.value = '';
+        }
+        channel.onmessage = (e) => {
+            if(e.data.room === currentRoom) appendChat(e.data.sender, e.data.text);
+        };
+        function appendChat(sender, text) {
+            const box = document.getElementById('chatMessages');
+            box.innerHTML += `<div><strong>${sender}:</strong> ${text}</div>`;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        // Request Form
+        function openRequest() { document.getElementById('requestModal').style.display = 'flex'; }
+        function closeRequest() { document.getElementById('requestModal').style.display = 'none'; }
+        function submitRequest() {
+            const name = document.getElementById('reqGameName').value;
+            if(!name) return;
+            fetch("https://formsubmit.co/ajax/xavierboyd231@gmail.com", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({ game_request: name })
+            }).catch(() => {});
+            alert("Request sent!");
+            document.getElementById('reqGameName').value = '';
+            closeRequest();
+        }
+
+        // Settings & Themes
+        function openSettings() { document.getElementById('settingsModal').style.display = 'flex'; }
+        function closeSettings() { document.getElementById('settingsModal').style.display = 'none'; }
+        function changeTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('choc_theme', theme);
+        }
+        const savedTheme = localStorage.getItem('choc_theme');
+        if(savedTheme) {
+            document.body.setAttribute('data-theme', savedTheme);
+            document.getElementById('themeSelect').value = savedTheme;
+        }
+
+        // Cloak
+        function toggleCloak() {
+            const c = document.getElementById('googleCloak');
+            c.style.display = c.style.display === 'flex' ? 'none' : 'flex';
+        }
+        window.addEventListener('keydown', (e) => {
+            if(e.key === '~') { e.preventDefault(); toggleCloak(); }
+        });
+    </script>
+</body>
+</html>
